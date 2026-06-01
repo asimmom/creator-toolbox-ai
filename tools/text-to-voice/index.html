@@ -1,1 +1,124 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Text-to-Voice Generator - Creator ToolBox AI</title><link rel="stylesheet" href="../../assets/css/style.css"></head><body><header class="site-header"><a class="brand" href="../../index.html"><span class="brand-icon">⚡</span><span>Creator ToolBox AI</span></a><nav class="top-nav"><a href="../../index.html#tools">Tools</a><a class="nav-cta" href="https://prime-motion-studio-website.pages.dev/" target="_blank">Prime Motion Studio</a></nav></header><main><section class="tool-hero"><a class="back-link" href="../../index.html#tools">← Back to tools</a><p class="eyebrow">Free browser tool</p><h1>Text-to-Voice Generator</h1><p>Preview voiceover narration using voices available in your browser. Best in Chrome or Edge.</p></section><section class="tool-layout"><div class="tool-panel"><div class="form-row"><label>Voiceover text</label><textarea id="voiceText" placeholder="Paste your script here..."></textarea></div><div class="form-row"><label>Voice</label><select id="voice"><option>Loading voices...</option></select><p class="hint">Available voices depend on the visitor's device/browser.</p></div><div class="range-grid"><div class="form-row"><label>Speed: <span id="rateVal">1</span></label><input id="rate" type="range" min="0.5" max="1.7" step="0.1" value="1"></div><div class="form-row"><label>Pitch: <span id="pitchVal">1</span></label><input id="pitch" type="range" min="0.5" max="1.8" step="0.1" value="1"></div></div><div class="form-row"><label>Volume: <span id="volumeVal">1</span></label><input id="volume" type="range" min="0" max="1" step="0.1" value="1"></div><div class="output-actions"><button class="btn primary" onclick="speakText()">Play Voice</button><button class="btn secondary" onclick="stopVoice()">Stop</button></div><p id="voiceStatus" class="voice-status">Ready.</p></div><div><div class="output-box"><strong>Important note:</strong> This free tool uses the browser's built-in speech engine. It is good for previewing narration and testing scripts. For downloadable MP3 voiceovers, users may need a dedicated voiceover app or recording software.\n\nSuggested workflow:\n1. Generate your script.\n2. Preview it here.\n3. Record or create your final voiceover.\n4. Add it to Prime Motion Studio with your images and effects.</div><div class="output-actions"><button class="small-btn" onclick="downloadText('voiceover-script.txt', document.getElementById('voiceText').value)">Download Script TXT</button></div></div></section><section class="promo-strip"><div><h2>Add your voiceover to a real video</h2><p>Prime Motion Studio lets creators add voiceover/audio, effects, logo and export a finished vertical video.</p></div><a class="btn primary" href="https://prime-motion-studio-website.pages.dev/" target="_blank">Visit Prime Motion Studio</a></section></main><script src="../../assets/js/app.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text-to-Voice Generator - Creator ToolBox AI</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../../index.html"><span class="brand-icon">⚡</span><span>Creator ToolBox AI</span></a>
+    <nav class="top-nav"><a href="../../index.html#tools">Tools</a><a class="nav-cta" href="https://prime-motion-studio-website.pages.dev/" target="_blank">Prime Motion Studio</a></nav>
+  </header>
+
+  <main>
+    <section class="tool-hero">
+      <a class="back-link" href="../../index.html#tools">← Back to tools</a>
+      <p class="eyebrow">Free browser tool</p>
+      <h1>Text-to-Voice Generator</h1>
+      <p>Create a quick voiceover preview with language, male/female style, tone, speed, pitch, and volume controls. Best in Chrome or Edge.</p>
+    </section>
+
+    <section class="tool-layout">
+      <div class="tool-panel">
+        <div class="form-row">
+          <label>Voiceover text</label>
+          <textarea id="voiceText" placeholder="Paste your script here...">Welcome to Creator ToolBox AI. Turn your ideas into scripts, prompts, titles, hashtags, and voiceover previews.</textarea>
+        </div>
+
+        <div class="range-grid">
+          <div class="form-row">
+            <label>Language</label>
+            <select id="voiceLanguage">
+              <option value="all">Auto / Any language</option>
+              <option value="en">English</option>
+              <option value="ar">Arabic</option>
+              <option value="es">Spanish</option>
+              <option value="fr">French</option>
+              <option value="de">German</option>
+              <option value="it">Italian</option>
+              <option value="tr">Turkish</option>
+              <option value="hi">Hindi</option>
+              <option value="ja">Japanese</option>
+              <option value="ko">Korean</option>
+              <option value="zh">Chinese</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label>Voice type</label>
+            <select id="voiceType">
+              <option value="any">Best available</option>
+              <option value="female">Female style</option>
+              <option value="male">Male style</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="range-grid">
+          <div class="form-row">
+            <label>Tone preset</label>
+            <select id="tonePreset">
+              <option value="natural">Natural narration</option>
+              <option value="story">Storytelling</option>
+              <option value="scary">Scary / mystery</option>
+              <option value="calm">Calm documentary</option>
+              <option value="energetic">Energetic Shorts</option>
+              <option value="deep">Deep dramatic</option>
+              <option value="soft">Soft friendly</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label>Available voice</label>
+            <select id="voice"><option>Loading voices...</option></select>
+          </div>
+        </div>
+
+        <p class="hint">Male/female options use the voices installed in the visitor's browser/device. If a device has no Arabic or no male/female voice, the tool will use the closest available voice.</p>
+
+        <div class="range-grid">
+          <div class="form-row"><label>Speed: <span id="rateVal">1</span></label><input id="rate" type="range" min="0.5" max="1.8" step="0.05" value="1"></div>
+          <div class="form-row"><label>Pitch: <span id="pitchVal">1</span></label><input id="pitch" type="range" min="0.5" max="1.8" step="0.05" value="1"></div>
+        </div>
+
+        <div class="form-row"><label>Volume: <span id="volumeVal">1</span></label><input id="volume" type="range" min="0" max="1" step="0.05" value="1"></div>
+
+        <div class="output-actions">
+          <button class="btn primary" onclick="speakText()">Play Voice</button>
+          <button class="btn secondary" onclick="pauseVoice()">Pause</button>
+          <button class="btn secondary" onclick="resumeVoice()">Resume</button>
+          <button class="btn secondary" onclick="stopVoice()">Stop</button>
+        </div>
+        <p id="voiceStatus" class="voice-status">Ready.</p>
+      </div>
+
+      <div>
+        <div class="output-box"><strong>How to get better voice results:</strong>
+
+1. Choose the same language as your script.
+2. Choose male or female style.
+3. Try tone presets like Scary, Storytelling, Calm, or Energetic.
+4. Adjust speed and pitch until it sounds clear.
+
+This free tool uses browser voices, so quality depends on the user's device. It is best for previewing scripts before creating your final video.</div>
+        <div class="output-actions">
+          <button class="small-btn" onclick="downloadText('voiceover-script.txt', document.getElementById('voiceText').value)">Download Script TXT</button>
+          <button class="small-btn" onclick="copyText('voiceText')">Copy Script</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="promo-strip">
+      <div>
+        <h2>Add your voiceover to a real video</h2>
+        <p>Prime Motion Studio lets creators add voiceover/audio, effects, logo and export a finished vertical video.</p>
+      </div>
+      <a class="btn primary" href="https://prime-motion-studio-website.pages.dev/" target="_blank">Visit Prime Motion Studio</a>
+    </section>
+  </main>
+
+  <script src="../../assets/js/app.js"></script>
+</body>
+</html>
