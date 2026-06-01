@@ -1,48 +1,16 @@
-function copyText(id){const el=document.getElementById(id);const text=el.innerText||el.value||'';navigator.clipboard.writeText(text).then(()=>alert('Copied!'));}
-function randomFrom(arr){return arr[Math.floor(Math.random()*arr.length)];}
-function generatePrompt(){
-  const topic=document.getElementById('topic').value.trim()||'mysterious story';
-  const style=document.getElementById('style').value;
-  const ratio=document.getElementById('ratio').value;
-  const mood=document.getElementById('mood').value;
-  const details=document.getElementById('details').value.trim();
-  const camera=randomFrom(['slow cinematic push-in','wide establishing shot','dramatic low angle','close-up emotional shot','over-the-shoulder view']);
-  const light=randomFrom(['volumetric lighting','soft film lighting','moonlit atmosphere','golden hour glow','dramatic rim light']);
-  const prompt=`${style} ${ratio} image prompt:\n\n${topic}. ${details ? details + '. ' : ''}${mood} mood, ${camera}, ${light}, ultra-detailed, sharp focus, professional composition, cinematic depth of field, realistic textures, high quality, no text, no watermark.\n\nNegative prompt: blurry, low quality, distorted face, extra fingers, bad anatomy, text, watermark, logo, duplicate subject.`;
-  document.getElementById('output').innerText=prompt;
-}
-function generateScript(){
-  const topic=document.getElementById('scriptTopic').value.trim()||'a strange mystery story';
-  const niche=document.getElementById('niche').value;
-  const length=document.getElementById('length').value;
-  const tone=document.getElementById('tone').value;
-  const hook=randomFrom([
-    `Most people have never heard about ${topic}...`,
-    `This sounds fake, but ${topic} is real.`,
-    `What happened with ${topic} still feels impossible.`,
-    `In just a few seconds, you will understand why ${topic} is so shocking.`
-  ]);
-  const script=`HOOK:\n${hook}\n\nVOICEOVER SCRIPT (${length}, ${tone}, ${niche}):\n${topic} started like something ordinary, but one detail changed everything. People noticed the signs, ignored the warnings, and only later realized how strange the story really was. The most shocking part is not what happened first — it is what happened after. And that is why ${topic} still grabs attention today.\n\nTITLE IDEAS:\n1. The Truth About ${topic}\n2. This Story Still Feels Impossible\n3. The Strange Mystery People Still Talk About\n\nDESCRIPTION:\nDiscover the strange story of ${topic}. A short, cinematic video made for curious viewers who love mysteries, facts, history, and unbelievable true stories.\n\nHASHTAGS:\n#Shorts #DidYouKnow #Mystery #Facts #ViralShorts\n\nTAGS:\n${topic}, ${niche}, youtube shorts, viral shorts, facts, mystery, story video, faceless video, AI video, short video`;
-  document.getElementById('scriptOutput').innerText=script;
-}
-let uploadedImage=null;
-function handleImage(e){const file=e.target.files[0];if(!file)return;const img=new Image();img.onload=()=>{uploadedImage=img;drawResized();};img.src=URL.createObjectURL(file);}
-function drawResized(){
-  if(!uploadedImage)return alert('Please upload an image first.');
-  const preset=document.getElementById('preset').value.split('x');
-  const w=parseInt(preset[0],10),h=parseInt(preset[1],10);
-  const mode=document.getElementById('fitMode').value;
-  const canvas=document.getElementById('resizeCanvas');
-  const ctx=canvas.getContext('2d');
-  canvas.width=w;canvas.height=h;
-  ctx.fillStyle='#0b0d14';ctx.fillRect(0,0,w,h);
-  const iw=uploadedImage.width, ih=uploadedImage.height;
-  let scale=mode==='cover'?Math.max(w/iw,h/ih):Math.min(w/iw,h/ih);
-  const nw=iw*scale, nh=ih*scale;
-  const x=(w-nw)/2, y=(h-nh)/2;
-  ctx.drawImage(uploadedImage,x,y,nw,nh);
-  const link=document.getElementById('downloadImage');
-  link.href=canvas.toDataURL('image/png');
-  link.download='resized-image.png';
-  link.style.display='inline-flex';
-}
+function $(id){return document.getElementById(id)}
+function copyText(id){const el=$(id); const text=el.innerText || el.value || ''; navigator.clipboard.writeText(text).then(()=>alert('Copied!')).catch(()=>alert('Could not copy. Select the text and copy manually.'))}
+function downloadText(filename, text){const blob=new Blob([text],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click(); URL.revokeObjectURL(a.href)}
+function cleanTopic(t){return (t||'').trim() || 'an interesting story'}
+function pickToneWords(tone){const map={cinematic:'cinematic, dramatic, emotional, high detail',scary:'dark, suspenseful, eerie, horror atmosphere',history:'ancient, realistic, historical, documentary style',facts:'clean, educational, modern, curiosity-driven',product:'professional, clean studio lighting, commercial style',motivational:'uplifting, inspiring, emotional, cinematic'};return map[tone]||map.cinematic}
+function generatePrompt(){const topic=cleanTopic($('topic').value); const style=$('style').value; const ratio=$('ratio').value; const count=parseInt($('count').value||'5',10); let out=''; for(let i=1;i<=count;i++){out+=`Scene ${i}: ${topic}. ${pickToneWords(style)}. Strong visual storytelling, clear subject, realistic lighting, depth of field, sharp details, professional composition, vertical ${ratio}, no text, no watermark.\n\n`} $('output').innerText=out.trim()}
+function generateScript(){const topic=cleanTopic($('topic').value); const tone=$('tone').value; const length=$('length').value; const hook=tone==='scary'?`Something about ${topic} still feels wrong...`:tone==='facts'?`Most people never knew this about ${topic}.`:`What happened with ${topic} is more interesting than it looks.`; const scenes=length==='short'?4:length==='medium'?6:8; let script=`HOOK:\n${hook}\n\nVOICEOVER:\n`; for(let i=1;i<=scenes;i++){script+=`${i}. ${topic} — reveal one powerful detail with a ${tone} feeling. Keep the sentence short, visual, and easy to understand.\n`} script+=`\nENDING CTA:\nFollow for more stories like this.\n\nTITLE IDEAS:\n- The Truth About ${topic}\n- This ${topic} Story Is Hard To Believe\n- What Nobody Told You About ${topic}\n\nHASHTAGS:\n#shorts #viral #story #facts #creator`; $('output').innerText=script}
+function generateTitles(){const topic=cleanTopic($('topic').value); const niche=$('niche').value; const titles=[`The Truth About ${topic}`,`This ${topic} Story Is Hard To Believe`,`What Nobody Told You About ${topic}`,`${topic}: The Moment Everything Changed`,`The Strange Story of ${topic}`,`Why ${topic} Is Going Viral`,`The Dark Secret Behind ${topic}`,`I Tried To Understand ${topic}... Then This Happened`,`${topic} Explained in 60 Seconds`,`You Won't Believe This About ${topic}`]; $('output').innerText=`Title ideas for ${niche}:\n\n`+titles.map((t,i)=>`${i+1}. ${t}`).join('\n')}
+function generateHashtags(){const topic=cleanTopic($('topic').value).replace(/\s+/g,''); const platform=$('platform').value; const base=['#shorts','#viral','#trending','#fyp','#creator','#video','#story']; const niche={scary:['#scary','#horror','#mystery','#creepy','#darkstory'],facts:['#facts','#didyouknow','#knowledge','#amazingfacts','#learnontiktok'],history:['#history','#ancienthistory','#historystory','#documentary','#legend'],ai:['#ai','#aitools','#aivideo','#facelesschannel','#contentcreator'],money:['#makemoneyonline','#sidehustle','#onlinebusiness','#digitalproducts','#creatorbusiness']}[$('niche').value]||[]; $('output').innerText=`${platform} hashtags:\n\n`+[`#${topic}`,...base,...niche].slice(0,18).join(' ')}
+function generateDescription(){const topic=cleanTopic($('topic').value); const niche=$('niche').value; const cta=$('cta').value || 'Subscribe for more videos like this.'; const desc=`Discover this ${niche} video about ${topic}. In this short video, we explore the most interesting details, surprising facts, and powerful moments connected to ${topic}. This content is made for viewers who enjoy fast, visual, and engaging short-form videos.\n\n${cta}\n\nKeywords: ${topic}, ${niche} video, YouTube Shorts, TikTok video, viral short, faceless video, story video, facts video, AI video creator, short-form content\n\nHashtags:\n#shorts #viral #trending #story #facts #contentcreator`; $('output').innerText=desc}
+function loadVoices(){if(!('speechSynthesis' in window))return; const select=$('voice'); if(!select)return; const voices=speechSynthesis.getVoices(); select.innerHTML=''; voices.forEach((v,i)=>{const opt=document.createElement('option'); opt.value=i; opt.textContent=`${v.name} (${v.lang})`; select.appendChild(opt)}); if(voices.length===0){const opt=document.createElement('option'); opt.textContent='Loading voices...'; select.appendChild(opt)}}
+function speakText(){if(!('speechSynthesis' in window)){alert('Your browser does not support text-to-speech. Try Chrome or Edge.');return} speechSynthesis.cancel(); const text=$('voiceText').value.trim(); if(!text){alert('Paste text first.');return} const voices=speechSynthesis.getVoices(); const utter=new SpeechSynthesisUtterance(text); const selected=parseInt($('voice').value||'0',10); if(voices[selected]) utter.voice=voices[selected]; utter.rate=parseFloat($('rate').value); utter.pitch=parseFloat($('pitch').value); utter.volume=parseFloat($('volume').value); utter.onstart=()=>{$('voiceStatus').textContent='Speaking...'}; utter.onend=()=>{$('voiceStatus').textContent='Finished.'}; utter.onerror=()=>{$('voiceStatus').textContent='Voice playback error.'}; speechSynthesis.speak(utter)}
+function stopVoice(){if('speechSynthesis' in window){speechSynthesis.cancel(); const s=$('voiceStatus'); if(s)s.textContent='Stopped.'}}
+function setupVoicePage(){loadVoices(); if('speechSynthesis' in window){speechSynthesis.onvoiceschanged=loadVoices} ['rate','pitch','volume'].forEach(id=>{const el=$(id); const out=$(id+'Val'); if(el&&out){out.textContent=el.value; el.addEventListener('input',()=>out.textContent=el.value)}})}
+function setupResizer(){const file=$('imageFile'), canvas=$('canvas'), ctx=canvas?.getContext('2d'); let img=new Image(); if(!file||!canvas)return; function draw(){if(!img.src)return; const preset=$('preset').value.split('x'); canvas.width=parseInt(preset[0],10); canvas.height=parseInt(preset[1],10); ctx.fillStyle=$('bgColor').value; ctx.fillRect(0,0,canvas.width,canvas.height); const mode=$('fitMode').value; const scale=mode==='cover'?Math.max(canvas.width/img.width,canvas.height/img.height):Math.min(canvas.width/img.width,canvas.height/img.height); const w=img.width*scale,h=img.height*scale,x=(canvas.width-w)/2,y=(canvas.height-h)/2; ctx.drawImage(img,x,y,w,h)} file.addEventListener('change',e=>{const f=e.target.files[0]; if(!f)return; img.onload=draw; img.src=URL.createObjectURL(f)}); ['preset','fitMode','bgColor'].forEach(id=>$(id).addEventListener('change',draw)); $('downloadImage').addEventListener('click',()=>{const a=document.createElement('a'); a.download='resized-image.png'; a.href=canvas.toDataURL('image/png'); a.click()})}
+window.addEventListener('DOMContentLoaded',()=>{setupVoicePage(); setupResizer();});
